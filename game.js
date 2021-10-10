@@ -62,15 +62,16 @@ btn.addEventListener("click", function(){
 //create a nameboard to show player's name and points
 const nameTable = document.createElement("div");
 nameTable.classList.add("nameTable")
-nameTable.innerHTML="Your Points"
+nameTable.innerHTML="YOUR POINTS"
 document.getElementById("canvas").appendChild(nameTable)
 
-//function to add name to the table
+//function to add name and score to the table
 function addName(yourName){	
-	//create a list of name
-	var namePlayer = document.createElement("li") 
+	//put name on the table
+	var namePlayer = document.createElement("div") 
 	namePlayer.classList.add("namePlayer")
 	namePlayer.innerHTML = `${yourName}: ${score}`;
+	console.log(`namePlayer`, namePlayer);
 	nameTable.appendChild(namePlayer);
 }
 
@@ -139,16 +140,16 @@ let update = function () {
 	// console.log(elapsedTime)
 
 	if (keysPressed['ArrowUp']) {
-		hero.y -= 5;
+		hero.y -= 10;
 	}
 	if (keysPressed['ArrowDown']) {
-		hero.y += 5;
+		hero.y += 10;
 	}
 	if (keysPressed['ArrowLeft']) {
-		hero.x -= 5;
+		hero.x -= 10;
 	}
 	if (keysPressed['ArrowRight']) {
-		hero.x += 5;
+		hero.x += 10;
 	}
 
 	// Check if player and monster collided. Our images
@@ -192,7 +193,9 @@ function render() {
 	});
 	ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 80);
 	ctx.fillText(`Your Score: ${score}`, 20, 50);
+
 	// As a player I have 15 seconds to catch as many monsters as possible
+	let timeLeft = SECONDS_PER_ROUND - elapsedTime;
 	// if(timeLeft==0){
 	// 	alert(`Game over, your score is: ${score}`)
 	// 	document.location.reload()
@@ -203,8 +206,7 @@ function render() {
 	// 	e.preventDefault();
 	// }
 
-	//[ ] As a player, if the timer runs out I can see a reset button.
-	var timeLeft = SECONDS_PER_ROUND - elapsedTime;
+	// As a player, if the timer runs out I can see a reset button.
 	if(timeLeft == 0){
 		var reset = document.createElement("button")
 		document.getElementById("canvas").appendChild(reset)
@@ -212,15 +214,20 @@ function render() {
 		reset.classList.add("btn-reset")
 		reset.setAttribute("type", "reset")
 		e.preventDefault();
-	//[ ] As a player, if the timer runs out I can press the reset button and start the game over.	
-	// reset.addEventListener('click', render())
+
+	// As a player, if the timer runs out I can press the reset button and start the game over.	
+		reset.addEventListener('click', function(){
+		
+		})
+	}
+	//As a player, if my score is higher than the previous high score then my score replaces it.
+
+	//As a player, I can see the history of last scores.
+
 }
-}
+	
 
-	//[ ] As a player, if my score is higher than the previous high score then my score replaces it.
-
-	//[ ] As a player, I can see the history of last scores.
-
+	
 /**
  * The main game loop. Most every game will have two distinct parts:
  * update (updates the state of the game, in this case our hero and monster)

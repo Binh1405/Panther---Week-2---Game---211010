@@ -48,8 +48,12 @@ button {
   height: 4em;
   background-color: hotpink;
   position: absolute;
-  top: 10vh;
+  top: 3vh;
   left: 50vw;
   z-index: 10;
   color: white;
+}
+
+.namePlayer {
+  margin-top: 10px;
 }
