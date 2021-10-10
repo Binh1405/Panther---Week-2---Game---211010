@@ -13,6 +13,7 @@ const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = 512;
 canvas.height = 480;
+canvas.style.cssText = 'position: relative; margin-top: 3em';
 document.getElementById('canvas').appendChild(canvas);
 
 let bg = {};
@@ -35,13 +36,48 @@ let monsters = [
 ];
 
 let startTime = Date.now();
-const SECONDS_PER_ROUND = 30;
+const SECONDS_PER_ROUND = 15;
 let elapsedTime = 0;
 
-function loadImages() {
-	bg.image = new Image();
+//score update when catching a monster
+let score=0;
 
-	bg.image.onload = function () {
+//see an input box
+const input = document.createElement('input')
+input.setAttribute("type", "text")
+input.setAttribute("placeholder", "put your name here")
+document.getElementById("canvas").appendChild(input);
+
+//create a button to submit input
+const btn = document.createElement('button')
+btn.innerHTML="<i class='fas fa-plus'></i>"
+document.getElementById("canvas").appendChild(btn);
+btn.addEventListener("click", function(){
+	if (input.value !==""){
+		addName(input.value)
+	}
+	input.value="";
+})
+
+//create a nameboard to show player's name and points
+const nameTable = document.createElement("div");
+nameTable.classList.add("nameTable")
+nameTable.innerHTML="Your Points"
+document.getElementById("canvas").appendChild(nameTable)
+
+//function to add name to the table
+function addName(yourName){	
+	//create a list of name
+	var namePlayer = document.createElement("li") 
+	namePlayer.classList.add("namePlayer")
+	namePlayer.innerHTML = `${yourName}: ${score}`;
+	nameTable.appendChild(namePlayer);
+}
+
+function loadImages() {
+	bg.image = new Image();//?
+
+	bg.image.onload = function () { 
 		// show the background image
 		bg.ready = true;
 	};
@@ -98,7 +134,9 @@ function setupKeyboardListeners() {
  */
 let update = function () {
 	// Update the time.
-	elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+	elapsedTime = Math.floor((Date.now() - startTime)/1000);
+
+	// console.log(elapsedTime)
 
 	if (keysPressed['ArrowUp']) {
 		hero.y -= 5;
@@ -118,16 +156,28 @@ let update = function () {
 	monsters.forEach((monster) => {
 		if (hero.x <= monster.x + 32 && monster.x <= hero.x + 32 && hero.y <= monster.y + 32 && monster.y <= hero.y + 32) {
 			// Pick a new location for the monster.
-			// Note: Change this to place the monster at a new, random location.
-			monster.x = monster.x + 50;
-			monster.y = monster.y + 70;
+			// Change this to place the monster at a new, random location.
+			monster.x = Math.floor(Math.random()*(canvas.width-20));
+			monster.y = Math.floor(Math.random()*(canvas.height-20));
+			score+= 1;
 		}
 	});
-};
+// Hero can move off the canvas and appears in the opposite side
+	if (hero.x > canvas.width){
+		hero.x = 0 
+	} else if(hero.x < 0){
+		hero.x = canvas.width
+	} else if (hero.y > canvas.height){
+		hero.y = 0
+	} else if (hero.y < 0){
+		hero.y = canvas.height;
+	}
+}; 
 
 /**
  * This function, render, runs as often as possible.
  */
+// let SECONDS_PER_ROUND - elapsedTime
 function render() {
 	if (bg.ready) {
 		ctx.drawImage(bg.image, 0, 0);
@@ -140,8 +190,36 @@ function render() {
 			ctx.drawImage(monster.image, monster.x, monster.y);
 		}
 	});
-	ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
+	ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 80);
+	ctx.fillText(`Your Score: ${score}`, 20, 50);
+	// As a player I have 15 seconds to catch as many monsters as possible
+	// if(timeLeft==0){
+	// 	alert(`Game over, your score is: ${score}`)
+	// 	document.location.reload()
+	// }
+
+	// if the timer runs out, can not move the hero
+	// if (timeLeft==0){
+	// 	e.preventDefault();
+	// }
+
+	//[ ] As a player, if the timer runs out I can see a reset button.
+	var timeLeft = SECONDS_PER_ROUND - elapsedTime;
+	if(timeLeft == 0){
+		var reset = document.createElement("button")
+		document.getElementById("canvas").appendChild(reset)
+		reset.textContent="Reset";
+		reset.classList.add("btn-reset")
+		reset.setAttribute("type", "reset")
+		e.preventDefault();
+	//[ ] As a player, if the timer runs out I can press the reset button and start the game over.	
+	// reset.addEventListener('click', render())
 }
+}
+
+	//[ ] As a player, if my score is higher than the previous high score then my score replaces it.
+
+	//[ ] As a player, I can see the history of last scores.
 
 /**
  * The main game loop. Most every game will have two distinct parts:

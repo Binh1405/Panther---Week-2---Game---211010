@@ -1,4 +1,55 @@
+body {
+  background-color: greenyellow;
+  padding-top: 10px;
+}
+
 #canvas {
-	display: flex;
-	justify-content: center;
+  display: flex;
+  justify-content: center;
+}
+
+input {
+  width: 10em;
+  height: 2em;
+  border: 1px solid yellow;
+  border-radius: 15px 15px;
+  background-color: black;
+  color: white;
+  font-size: 1em;
+  position: absolute;
+  left: 30em;
+}
+
+::placeholder {
+  color: white;
+}
+
+.nameTable {
+  height: 30em;
+  width: 10em;
+  border: 1px solid rebeccapurple;
+  margin-top: 4em;
+  margin-left: 2em;
+  text-align: center;
+  background-color: greenyellow;
+  font-weight: bolder;
+}
+
+button {
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  left: 49em;
+  color: red;
+}
+
+.btn-reset {
+  width: 10em;
+  height: 4em;
+  background-color: hotpink;
+  position: absolute;
+  top: 10vh;
+  left: 50vw;
+  z-index: 10;
+  color: white;
 }
