@@ -36,7 +36,7 @@ let monsters = [
 ];
 
 let startTime = Date.now();
-const SECONDS_PER_ROUND = 15;
+const SECONDS_PER_ROUND = 2;
 let elapsedTime = 0;
 
 //score update when catching a monster
@@ -76,7 +76,7 @@ function addName(yourName){
 }
 
 function loadImages() {
-	bg.image = new Image();//?
+	bg.image = new Image();
 
 	bg.image.onload = function () { 
 		// show the background image
@@ -136,6 +136,30 @@ function setupKeyboardListeners() {
 let update = function () {
 	// Update the time.
 	elapsedTime = Math.floor((Date.now() - startTime)/1000);
+	let timeLeft = SECONDS_PER_ROUND - elapsedTime;
+	
+	if(timeLeft == 0){
+
+		var reset = document.createElement("button")
+		document.getElementById("canvas").appendChild(reset)
+		reset.textContent="Reset";
+		reset.classList.add("btn-reset")
+		reset.setAttribute("type", "reset")
+
+	// As a player, if the timer runs out I can press the reset button and start the game over.	
+		reset.addEventListener('click', function (){
+			console.log("reset button")
+			hero.x = canvas.width / 2
+			hero.y = canvas.height / 2 
+			console.log("monster", monsters)
+			monsters[0] = {...monsters[0], x:100, y:100};
+			monsters[1] = {...monsters[1], x:200, y:200}
+			monsters[2] = {...monsters[2], x:300, y:300}
+			score=0;
+			startTime = Date.now()
+		}
+		)
+	}
 
 	// console.log(elapsedTime)
 
@@ -195,7 +219,7 @@ function render() {
 	ctx.fillText(`Your Score: ${score}`, 20, 50);
 
 	// As a player I have 15 seconds to catch as many monsters as possible
-	let timeLeft = SECONDS_PER_ROUND - elapsedTime;
+
 	// if(timeLeft==0){
 	// 	alert(`Game over, your score is: ${score}`)
 	// 	document.location.reload()
@@ -207,26 +231,11 @@ function render() {
 	// }
 
 	// As a player, if the timer runs out I can see a reset button.
-	if(timeLeft == 0){
-		var reset = document.createElement("button")
-		document.getElementById("canvas").appendChild(reset)
-		reset.textContent="Reset";
-		reset.classList.add("btn-reset")
-		reset.setAttribute("type", "reset")
-		e.preventDefault();
 
-	// As a player, if the timer runs out I can press the reset button and start the game over.	
-		reset.addEventListener('click', function(){
-		
-		})
-	}
+}
 	//As a player, if my score is higher than the previous high score then my score replaces it.
 
 	//As a player, I can see the history of last scores.
-
-}
-	
-
 	
 /**
  * The main game loop. Most every game will have two distinct parts:
